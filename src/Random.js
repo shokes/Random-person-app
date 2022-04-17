@@ -13,8 +13,9 @@ const defaultImage = 'https://randomuser.me/api/portraits/women/67.jpg';
 const RandomPerson = function () {
   const [loading, setLoading] = useState(false);
   const [person, setPerson] = useState(null);
-
+  const [value, setValue] = useState('random person');
   const getRandomPerson = async () => {
+    setLoading(true);
     const response = await fetch(url);
     const data = await response.json();
     // console.log(data);
@@ -23,17 +24,52 @@ const RandomPerson = function () {
     const {
       picture: { large: image },
     } = data.results[0];
+    const { cell } = data.results[0];
+    const { email } = data.results[0];
+    const {
+      name: { first, last },
+    } = data.results[0];
+    const {
+      login: { password },
+    } = data.results[0];
+
+    const {
+      dob: { age },
+    } = data.results[0];
+
+    const {
+      location: {
+        street: { name, number },
+      },
+    } = data.results[0];
 
     const newPerson = {
       image,
+      cell,
+      email,
+      first,
+      last,
+      password,
+      age,
+      name: `${first} ${last}`,
+      street: `${number} ${name}`,
     };
-
+    //  console.log(newPerson);
+    setLoading(false);
     setPerson(newPerson);
+    setValue('random person');
   };
 
   useEffect(() => {
     getRandomPerson();
   }, []);
+
+  const buttonHandler = (e) => {
+    if (e.target.classList.contains('icon')) {
+      const newValue = e.target.dataset.label;
+      setValue(person[newValue]);
+    }
+  };
 
   return (
     <main className='container'>
@@ -42,28 +78,45 @@ const RandomPerson = function () {
           src={(person && person.image) || defaultImage}
           alt='random image'
         />
-        <p>jfjffkkfjfkfkjf</p>
+        <p className='value'>{value}</p>
       </section>
-      <button>
-        <FaEnvelopeOpen />
-      </button>
-      <button>
-        <FaUser />
-      </button>
+      <div className='icon-flex'>
+        <button
+          className='icon'
+          onMouseEnter={buttonHandler}
+          data-label='email'
+        >
+          <FaEnvelopeOpen />
+        </button>
+        <button className='icon' onMouseEnter={buttonHandler} data-label='name'>
+          <FaUser />
+        </button>
 
-      <button>
-        <FaCalendarTimes />
+        <button className='icon' onMouseEnter={buttonHandler} data-label='age'>
+          <FaCalendarTimes />
+        </button>
+        <button
+          className='icon'
+          onMouseEnter={buttonHandler}
+          data-label='street'
+        >
+          <FaMap />
+        </button>
+        <button className='icon' onMouseEnter={buttonHandler} data-label='cell'>
+          <FaPhone />
+        </button>
+        <button
+          className='icon'
+          onMouseEnter={buttonHandler}
+          data-label='password'
+        >
+          <FaLock />
+        </button>
+      </div>
+
+      <button onClick={getRandomPerson} className='btn'>
+        {loading ? 'loading..' : ' Random person'}
       </button>
-      <button>
-        <FaCalendarTimes />
-      </button>
-      <button>
-        <FaCalendarTimes />
-      </button>
-      <button>
-        <FaCalendarTimes />
-      </button>
-      <button onClick={getRandomPerson}>Random person</button>
     </main>
   );
 };

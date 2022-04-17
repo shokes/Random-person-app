@@ -20,3 +20,23 @@ body {
 img {
   border-radius: 50%;
 }
+
+.btn {
+  cursor: pointer;
+}
+
+.icon {
+  cursor: pointer;
+  font-size: 3rem;
+}
+.icon-flex {
+  display: flex;
+  gap: 2rem;
+
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.value {
+  margin-bottom: 1rem;
+}
